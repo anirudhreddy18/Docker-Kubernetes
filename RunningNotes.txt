@@ -1,1 +1,47 @@
-Hello
+docker run -it redis (run redis commands in a terminal)
+Image --> Single file with all dependecies and config required to run a program
+Container -->  Runtime instance of an image
+
+Docker Ecosystem
+Docker client (running commands or docker cli)
+Docker server (responsible for creating images, running containers etc)
+Docker machine
+Docker Images
+Docker compose
+Docker Hub
+
+*** Docker client does some processing on commands enetered and docker server does the heavy lifting
+*** Docker server looks for image cache first if it dosent find then downloads from priavte repo/docker hub.
+when running docker on mac/windows it actually installs a Linux VM and then runs processes in the VM.
+
+docker logs container-id (Get logs of a container)
+docker stop container-id || docker kill container-id
+docker rm container-id
+docker ps || docker ps --all
+
+Redis 
+docker run redis (Runs the redis server on port 6379 in a container)
+To connect to a container then use docker exec -it container-id redis-cli 
+
+Terminal in Container
+docker exec -it container-id sh|bash (Run command prompt in a container)
+also can use docker run -it image sh
+containers always run in isolation
+
+DockerFile
+base image  FROM
+Run some commands  RUN
+commnad to run on container startup  CMD
+docker build -t avemula/nginx:latest .
+
+SAMPLE NODE JS APP
+docker run -it avemula/sample-node sh
+docker exec -it container-id sh
+ls will show all the files
+exit to get out of container or ctrl+c or ctrl+d
+copy package.json and run npm install and then copy all remaining  this will allow cache for the dependecies and then if u change index.js file build would be fast
+
+
+
+
+
