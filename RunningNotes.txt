@@ -28,6 +28,7 @@ docker exec -it container-id sh|bash (Run command prompt in a container)
 also can use docker run -it image sh
 containers always run in isolation
 
+docker container prune (deletes all containers)
 DockerFile
 base image  FROM
 Run some commands  RUN
@@ -41,7 +42,11 @@ ls will show all the files
 exit to get out of container or ctrl+c or ctrl+d
 copy package.json and run npm install and then copy all remaining  this will allow cache for the dependecies and then if u change index.js file build would be fast
 
-
+DOCKER COMPOSE
+docker-compose up -d
+docker-comnpose down
+restart: always --> always restarts the containers when container start fails
+docker-compose ps (similar to docker ps)
 
 
 
