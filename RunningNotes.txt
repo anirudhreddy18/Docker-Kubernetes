@@ -1,3 +1,5 @@
+DOCKER ----------------------------------------------
+
 docker run -it redis (run redis commands in a terminal)
 Image --> Single file with all dependecies and config required to run a program
 Container -->  Runtime instance of an image
@@ -44,7 +46,7 @@ copy package.json and run npm install and then copy all remaining  this will all
 
 DOCKER COMPOSE
 docker-compose up -d
-docker-comnpose down
+docker-compose down
 restart: always --> always restarts the containers when container start fails
 docker-compose ps (similar to docker ps)
 
@@ -53,3 +55,36 @@ React APP
 Start react app in local docker container
 docker run -p 3000:3000 -v $(pwd):/app image-id -v /app/node_modules (if we want to use container node modules)
 docker exec -it container-id npm run test(can specify different commands to running container)
+
+Kubernetes------------------------------------------------------
+
+Can scale up individual services instead of whole app (client, nginx, server) we could just increase server instances.
+Running many different containers in multiple different virtual machines.
+
+Development --> mini cube (command line tool)
+Production --> Amazon elastic container service, google cloud Kubernetes engine
+
+(installed kubectl, virtualBox, miniKube for local Development).
+*** minikube to used to install kubernetes cluster, and kubectl is used to interact with the cluster. (Local Development)
+*** minikube start (installed a vm on local conmputer) which is called Node.
+
+Checking if miniKube & Kubectl Started
+kubectl cluster-info (checking status)
+miniKube status
+
+config File (used to  create objects) ==> StatefulSet, ReplicaContainer, Pod, Service (running a container, monitoring a container, setting up networking)
+*** Pod means running 1 or more closely related containers. 
+*** Service means setup Networking in Kubernetes Cluster.
+Smallest deployable unit in kubernetes is a Pod(a pod has to have 1 or more containers).
+
+Object Types
+Pod 
+Service (Types ClusterIP, NodePort(Expose container to outside world only for dev), LoadBalancer, Ingress)
+
+YAML File
+**** Selector component in node port file is used to identify how to route traffic to a pod. (labels is how its defined in a pod file)
+nodePort would be in b/w (30000 - 32767)
+
+Get Status of deployed Pods / services
+kubectl get pods
+kubectl get services
