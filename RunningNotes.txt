@@ -76,6 +76,7 @@ kubectl cluster-info (checking status)
 miniKube status
 minikube ip
 minikube dashboard
+minikube stop
 
 config File (used to  create objects) ==> StatefulSet, ReplicaContainer, Pod, Service (running a container, monitoring a container, setting up networking)
 *** Pod means running 1 or more closely related containers. 
