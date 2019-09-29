@@ -111,7 +111,7 @@ kubectl get pods -o wide
 kubectl get services
 kubectl get deployments
 kubectl get pv (to get Persisternt Volume Claim)
-kubectl describe pod name-of-object
+kubectl describe pod/object name-of-object
 kubectl logs pod-name/service-name (similar to docker ps)
 kubectl get secrets
 
@@ -138,7 +138,7 @@ image: multi-client (docker image)
 How to recreate our pods with latest version of multi-client image pushed to docker hub
 1.push updated docker image to docker hub with new version & update kubernetes config file with new version.
 2. Imperative command push updted image to docker hub with tag & apply this command
-kubectl set image deployment/client-deployment client=anirudhreddy18/multi-client
+kubectl set image deployments/client-deployment client=anirudhreddy18/multi-client
 
 *** eval $(minikube docker-env) ---- connects to docker server in kubernetes node (runs only in current terminal) why? still use docker cli commands for debugging
 
@@ -158,3 +158,28 @@ INGRESS *******************
 We are using kubernetes/nginx-ingress to configure to outside traffic.
 Deployment is a type of controller since we are updating state, like initially 0 pods running & applying config file to master changes to 3 pods running.
 
+Deployment to Cloud GCP 
+CI RUnner Steps
+install cli google cloud
+auth info google cloud
+Run Tests 
+docker cli login
+build new images with tags                          docker build -t anirudhreddy18/image:latest -t anirudhreddy18/image:1.2.3 .
+push to docker hub                                  docker push anirudhreddy18/image:latest     docker push anirudhreddy18/image:1.2.3 
+apply config files k8s folder                       kubectl apply -f k8s
+Imperatively set images on each deployment.         kubectl set image deployments/deployment-name containerName=anirudhreddy18/image:1.2.3 
+
+1 advantage of using GCP is we can connect to cluster via terminal and run same kubectl commands.
+
+Kubernetes engine
+Clusters --:> cluster
+Workloads -> deployments, Pods
+Services: ClusterIP, Load Babalancer, Ingress
+Configuration: Secrets
+
+Helm
+Local mac install by using Homebrew
+Helm 3rd party software  which has Helm CLient connects to tiller Server
+RBAC (Role based Access Control) UserAccounts , Service Accounts 
+Roles -- ClusterRoleBinding, Role Binding
+To install nginx Ingress we are using Helm.
