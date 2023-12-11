@@ -183,3 +183,40 @@ Helm 3rd party software  which has Helm CLient connects to tiller Server
 RBAC (Role based Access Control) UserAccounts , Service Accounts 
 Roles -- ClusterRoleBinding, Role Binding
 To install nginx Ingress we are using Helm.
+
+Kubernetes
+  2 main concepts:
+   - control plane
+   - worker Nodes
+
+Control Plane 
+ -  responsible for maintaining state of cluster. 
+ - Pods are created & managed by control plane.
+Master:
+ - API Server -> primary interface b/w control plane & rest of the cluster, rest api.
+ - etcd -> is a key value store, store the persistent state of the cluster
+ - scheduler -> scheduling pods on worker nodes
+ - controller manager -> run controllers to maintain state like replication, rollout etc.
+
+Worker
+  - container runtime -> docker
+  - kube-proxy: routing traffic b/w pods & load balancing
+  - kubelet: deamon running, maintains desired state from pods, receive instructions from control plane.
+
+ - Managed Service providers GKE, EKS manage control planes
+
+UI/cli ————sends rest api request ——> Control plane ——> API Server —————> Worker Nodes
+
+Features:
+  - Networking
+  - service Discovery
+  - Self Healing
+  - Scaling
+  - Load balancing
+  - Automated Rollbacks.
+
+Patterns
+ - Ambassador - proxy -> provides https support.
+ - Adapter -> volume sharing , one container mounts at particular location & other takes that as input & adapts.
+ - Init -> fetch secrets from vault
+ - Sidecar => monitoring , authentication, logging etc
