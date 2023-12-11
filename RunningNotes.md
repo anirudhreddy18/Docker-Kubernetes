@@ -13,49 +13,50 @@
 * Docker compose
 * Docker Hub
 
-*** Docker client does some processing on commands enetered and docker server does the heavy lifting
-*** Docker server looks for image cache first if it dosent find then downloads from priavte repo/docker hub.
-when running docker on mac/windows it actually installs a Linux VM and then runs processes in the VM.
+- **Docker client does some processing on commands enetered and docker server does the heavy lifting**
+- **Docker server looks for image cache first if it dosent find then downloads from priavte repo/docker hub.**
+- when running docker on mac/windows it actually installs a Linux VM and then runs processes in the VM.
 
-docker logs container-id (Get logs of a container)
-docker stop container-id || docker kill container-id
-docker rm container-id
-docker ps || docker ps --all
+### Commands
+- docker logs container-id (Get logs of a container)
+- docker stop container-id || docker kill container-id
+- docker rm container-id
+- docker ps || docker ps --all
 
-Redis 
-docker run redis (Runs the redis server on port 6379 in a container)
-To connect to a container then use docker exec -it container-id redis-cli 
+### Redis 
+- docker run redis (Runs the redis server on port 6379 in a container)
+- To connect to a container then use docker exec -it container-id redis-cli 
 
-Terminal in Container
-docker exec -it container-id sh|bash (Run command prompt in a container)
-also can use docker run -it image sh
-containers always run in isolation
-docker container prune (deletes all containers)
+### Terminal in Container
+- docker exec -it container-id sh|bash (Run command prompt in a container)
+- also can use docker run -it image sh
+- containers always run in isolation
+- docker container prune (deletes all containers)
 
-DockerFile
-base image  FROM
-Run some commands  RUN
-commnad to run on container startup  CMD
-docker build -t avemula/nginx:latest .
+### DockerFile
+- base image  FROM
+- Run some commands  RUN
+- commnad to run on container startup  CMD
+- docker build -t avemula/nginx:latest .
 
-SAMPLE NODE JS APP
-docker run -it avemula/sample-node sh
-docker exec -it container-id sh
-ls will show all the files
-exit to get out of container or ctrl+c or ctrl+d
-copy package.json and run npm install and then copy all remaining  this will allow cache for the dependecies and then if u change index.js file build would be fast
+### SAMPLE NODE JS APP
+- docker run -it avemula/sample-node sh
+- docker exec -it container-id sh
+- ls will show all the files
+- exit to get out of container or ctrl+c or ctrl+d
+- copy package.json and run npm install and then copy all remaining  this will allow cache for the dependecies and then if u change index.js file build would be fast
 
-DOCKER COMPOSE
-docker-compose up -d
-docker-compose down
-restart: always --> always restarts the containers when container start fails
-docker-compose ps (similar to docker ps)
-
+### DOCKER COMPOSE
+- docker-compose up -d
+- docker-compose down
+- restart: always --> always restarts the containers when container start fails
+- docker-compose ps (similar to docker ps)
 -f to specify different docker file (-f Dockerfile.dev)
-React APP
-Start react app in local docker container
-docker run -p 3000:3000 -v $(pwd):/app image-id -v /app/node_modules (if we want to use container node modules)
-docker exec -it container-id npm run test(can specify different commands to running container)
+
+### React APP
+- Start react app in local docker container
+- docker run -p 3000:3000 -v $(pwd):/app image-id -v /app/node_modules (if we want to use container node modules)
+- docker exec -it container-id npm run test(can specify different commands to running container)
 
 ## Kubernetes
 - what is kubernetes?  system for running many different containers over multiple VM's.
@@ -98,7 +99,7 @@ Ingress (accepts incoming traffic & routing rules to get traffic to services ex:
 ### YAML File
 - Selector component in node port file is used to identify how to route traffic to a pod. (labels is how its defined in a pod file) nodePort would be in b/w (30000 - 32767)
 
-## All Kubectl Commands
+### All Kubectl Commands
 - kubectl apply -f filename (we will always interact with master node & feed commands to master)
 - kubectl delete -f filename (will remove the pod)
 - kubectl delete deployment name
