@@ -61,6 +61,10 @@
 ## Kubernetes
 - what is kubernetes?  system for running many different containers over multiple VM's.
 - why use kubernetes? when you need to run many different containers with different images.
+- Container orchestration tool for easily managing, scaling & deploying containers.
+- Node -> worker node are VM’s which has docker installed. They can run containers. Other softwares are kube-proxy etc.
+- Minikube -> creates a worker node on local computer. Minikube ip to get IP Address
+- Image GCR: gcr.io/project-name/image:tag
 
 ### Uses:
 - Can scale up individual services instead of whole app (client, nginx, server) we could just increase server instances.
@@ -86,18 +90,29 @@
 - **Deployment maintains set of identical pods, ensuring they have correct config and right number exists.**
 - **Smallest deployable unit in kubernetes is a Pod(a pod has to have 1 or more containers).**
 
-### Object Types
+### Pods
 - Pod (used for Development but we always deploy pods using deployment file)
 - Deployment (used in Production since we can update replicas, image, container name, container Port)
+- used to run containers, group of containers that should be tightly coupled. Each Pod has an IP Address 
 
 ### Service (Setup Networking) Types 
-ClusterIP (expose access of pods for other objects inside the cluster like API connects to redis/postgres, not exposed to outside traffic, only exposed in cluster)
-NodePort (Expose container/pod to outside world only for development) 
-LoadBalancer (Legacy because we want UI & API via nginx both exposed to outside world & load balacer can only do it for 1 pod)
-Ingress (accepts incoming traffic & routing rules to get traffic to services ex: nignx ingress)
+- ClusterIP (expose access of pods for other objects inside the cluster like API connects to redis/postgres, not exposed to outside traffic, only exposed in cluster)
+- NodePort (Expose container/pod to outside world only for development) 
+- LoadBalancer (Legacy because we want UI & API via nginx both exposed to outside world & load balacer can only do it for 1 pod)
+- Ingress (accepts incoming traffic & routing rules to get traffic to services ex: nignx ingress).acts as reverse proxy & forwards requests to ClusterIP Services.
+- Pods can be deleted/recreated for whatever reason. Services make sure they forward the requests to correct Pods using labels.
+  
+### Deployment
+- Deployment => maintains a set of identical pods, ensuring config & correct number exists. It can either update a pod or create a new pod.
+- Deployment will let master know to create pods. The selector field is used to match with the labels provided at pod level.
+
+### Stateful Set
+- Mostly used for Stateful apps like Databases.
+- Database can only have 1 writes, others are just replicas. So state needs to be synced - & then replica's need to be updated as well.
 
 ### YAML File
 - Selector component in node port file is used to identify how to route traffic to a pod. (labels is how its defined in a pod file) nodePort would be in b/w (30000 - 32767)
+- Name & kind are unique objects 
 
 ### All Kubectl Commands
 - kubectl apply -f filename (we will always interact with master node & feed commands to master)
@@ -106,20 +121,24 @@ Ingress (accepts incoming traffic & routing rules to get traffic to services ex:
 - kubectl delete service name
 
 ### Get Status of deployed Pods / services/deployments
+- kubectl apply -f .
 - kubectl get pods -o wide
 - kubectl get services
 - kubectl get deployments
+- kubectl get pod 
 - kubectl get pv (to get Persisternt Volume Claim)
-- kubectl describe pod/object name-of-object
-- kubectl logs pod-name/service-name (similar to docker ps)
+- kubectl describe pod pod-name
 - kubectl get secrets
+- K delete -f .
+- K get logs pod-id
+- K exec -it pod-id sh (connect using shell)
+- K get pvc
 
+### Kubectl
 - All Kubectl commands are feeded to master node. we dont really touch the node/VM master takes care of it.
 - Each node/VM has a docker preinstalled , downloads the image from docker hub & runs the image in a container.
 - We will be following declarative approach all the time.
-
 - Updating a config file (have the same name & type always & then update remaining things). Name is the unique ID, if its a new name then master will create a new pod.
-
 - to need details for an object command is kubectl describe pod name-of-object 
 
 ### Deployment pod Template
@@ -144,19 +163,25 @@ Ingress (accepts incoming traffic & routing rules to get traffic to services ex:
 - Persistent Voulme Claim -- like an advertisement where u can ask for different hard drive options, kubernetes already has statically provisioned volume if its not readily available, then 
   provision a dynamically provisioned voulme. Master will create PVC in the cluster/node.
 
-*** API wants to connect to redis/postgres HOST/URL would be name of clusterip service of postgres/redis     
+- API wants to connect to redis/postgres HOST/URL would be name of clusterip service of postgres/redis     
 
 ### Create Secrets
 - kubectl create secret generic pgpassword --from-literal PGPASSWORD=12345asdf
+- spec.containers.env.valueFrom.secretKeyRef.name = password (secret key name)
+- spec.containers.env.valueFrom.secretKeyRef.key = PGPASSWORD
+- Same config needs to be added for Postgres deployment/pod file
 
 ### INGRESS
-We are using kubernetes/nginx-ingress to configure to outside traffic.
-Deployment is a type of controller since we are updating state, like initially 0 pods running & applying config file to master changes to 3 pods running.
+- a load balancer/ingress runs inside the cluster. Outside Classic Load balancer forwards requests to load balancing running inside the K8s cluster.
+- **Default backend pod added by default for health checks. This can be changed to our Custom API.**
+- Nginx-ingress will be able to bypass ClusterIP & fwd requests directly to Pods. Used for Sticky Sessions.
+- We are using kubernetes/nginx-ingress to configure to outside traffic.
+- Deployment is a type of controller since we are updating state, like initially 0 pods running & applying config file to master changes to 3 pods running.
 
 ## Deployment to Cloud GCP 
 - CI RUnner Steps
 - install cli google cloud
--  auth info google cloud
+- auth info google cloud
 - Run Tests 
 - docker cli login
 - build new images with tags                          docker build -t anirudhreddy18/image:latest -t anirudhreddy18/image:1.2.3 .
@@ -170,13 +195,6 @@ Deployment is a type of controller since we are updating state, like initially 0
 - Workloads -> deployments, Pods
 - Services: ClusterIP, Load Babalancer, Ingress
 - Configuration: Secrets
-
-### Helm
-- Local mac install by using Homebrew
-- Helm 3rd party software  which has Helm CLient connects to tiller Server
-- RBAC (Role based Access Control) UserAccounts , Service Accounts 
-- Roles -- ClusterRoleBinding, Role Binding
-- To install nginx Ingress we are using Helm.
 
 ## Kubernetes Concepts
   - control plane
@@ -213,3 +231,19 @@ UI/cli ————sends rest api request ——> Control plane ——> API Serv
  - Adapter -> volume sharing , one container mounts at particular location & other takes that as input & adapts.
  - Init -> fetch secrets from vault
  - Sidecar => monitoring , authentication, logging etc
+
+## Helm
+- Local mac install by using Homebrew
+- Helm 3rd party software  which has Helm CLient connects to tiller Server
+- RBAC (Role based Access Control) UserAccounts , Service Accounts 
+- Roles -- ClusterRoleBinding, Role Binding
+- To install nginx Ingress we are using Helm.
+- package manager(package all files together & install just using 1 command) ex: gitlab
+- Templating engine(can have 1 spring boot template & use it for all apps by just changing image:version)
+- Deploy the same app across all environments (dev, test, prod)
+- Release management rollback with Tiller(rollback feature)
+ 
+ ### Features:
+  - bundle of yaml files
+  - Helm charts
+  - Helm repositories   
